@@ -22,13 +22,18 @@
     </head>
     <body class="antialiased py-4 px-6">
         <h1>Advent of Code 2022</h1>
-        <h2>Day 1</h2>
+        <h2>Day 1 Part 1</h2>
         @php
-            echo str(File::get(resource_path('aoc_input/day1/input.txt')))
+            $caloriesByElf = str(File::get(resource_path('aoc_input/day1/input.txt')))
              ->explode(PHP_EOL.PHP_EOL)
              ->map(
                  fn($i) => str($i)->explode(PHP_EOL)->map(fn($i)=>(int)$i)
-             )->map->sum()->sort()->last() . ' Calories';
+             )->map->sum()->sort();
+            echo $caloriesByElf->last() . ' Calories';
+        @endphp
+        <h2>Day 1 Part 2</h2>
+        @php
+            echo $caloriesByElf->splice(-3)->sum() . ' Calories'
         @endphp
     </body>
 </html>
