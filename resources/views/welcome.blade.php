@@ -24,9 +24,9 @@
         <h1>Advent of Code 2022</h1>
         <h2>Day 1 Part 1</h2>
         @php
-            $caloriesByElf = str(File::get(resource_path('aoc_input/day1/input.txt')))
-             ->explode(PHP_EOL.PHP_EOL)
-             ->map(
+            $caloriesByElf = str(
+                File::get(resource_path('aoc_input/day1/input.txt'))
+            )->explode(PHP_EOL.PHP_EOL)->map(
                  fn($i) => str($i)->explode(PHP_EOL)->map(fn($i)=>(int)$i)
              )->map->sum()->sort();
             echo $caloriesByElf->last() . ' Calories';
