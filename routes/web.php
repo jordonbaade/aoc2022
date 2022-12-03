@@ -49,12 +49,13 @@ Route::get('/', function () {
         )),
         // Day 3
         fn() => $input->explode($n)->map(
-            fn($i)=>collect(str_split($i))->split(2)
-        )->map(
-            fn($i)=>$i[0]->intersect($i[1])->unique()->first()
+            fn($i)=>collect(str_split($i))
+        )->chunk(3)->map->values()->map(
+            fn($i)=>$i[0]->intersect($i[1])->intersect($i[2])->unique()->first()
         )->map(fn($c) => $get['priority'][$c]
         )->tap(fn($t)=>dd(
-         'Day 3, Part 1: '.$t->sum(),
+            'Day 3, Part 1: 8252 (Calculated from old code)',
+            'Day 3, Part 2: '.$t->sum()
         )),
         // Day #
         // fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
