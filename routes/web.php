@@ -15,32 +15,35 @@ use Illuminate\Support\Facades\Route;
 // Helpers
 
 Route::get('/', function () {
-    $day = 1;
+    $day = 2;
+    $n = PHP_EOL;
+    $input = str(File::get(resource_path(sprintf('aoc_input/day%s.txt', $day))));
     collect([
         // Day 1
-        fn() => str(
-               File::get(resource_path('aoc_input/day1/input.txt'))
-           )->explode(PHP_EOL.PHP_EOL)->map(
-               fn($i) => str($i)->explode(PHP_EOL)->map(fn($i)=>(int)$i)
-           )->map->sum()->sort()->tap(function($caloriesByElf) {
-               dd(
-                   'Day 1, Part 1: '.$caloriesByElf->last().' Calories',
-                   'Day 1, Part 2: '.$caloriesByElf->splice(-3)->sum().' Calories'
-               );
+        fn() => $input->explode($n.$n)->map(
+               fn($i) => str($i)->explode($n)->map(fn($i)=>(int)$i)
+            )->map->sum()->sort()->tap(fn($caloriesByElf) => dd(
+               'Day 1, Part 1: '.$caloriesByElf->last().' Calories',
+                'Day 1, Part 2: '.$caloriesByElf->splice(-3)->sum().' Calories'
+            )
+        ),
+        // Day 2
+        fn() => $input->explode($n)->map(
+            fn($match) => str($match)->replace(
+                ['A', 'B', 'C', 'X', 'Y', 'Z'], [1, 2, 3, 1, 2, 3]
+            )->explode(' ')
+        )->map(fn($point) =>
+            (($result = $point[0]-$point[1]) === 0
+                ? 3 : ($result === -1 || $result === 2 ? 6 : 0)
+            ) + $point[1]
+        )->tap(function($scoresPerMatch) {
+                   dd(
+                   'Day 2, Part 1: '.$scoresPerMatch->sum(),
+                   'Day 2, Part 2: '
+                   );
         }),
-        // Day 2
-        fn() => str(
-               File::get(resource_path('aoc_input/day1/input.txt'))
-           )->dd('dostuffhere')->tap(function($caloriesByElf) {
-               dd(
-                   'Day 2, Part 1: ',
-               'Day 2, Part 2: '
-               );
-           }),
-        // Day 2
-//        fn() => str(
-//            File::get(resource_path('aoc_input/day1/input.txt'))
-//        )->dd('dostuffhere')->tap(function($caloriesByElf) {
+        // Day 3
+//        fn() => $input->dd('dostuffhere')->tap(function($caloriesByElf) {
 //            dump('Day 2, Part 1: ');
 //            dump('Day 2, Part 2: ');
 //        }),
