@@ -12,12 +12,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Helpers
 
 Route::get('/', function () {
-    $day = 2;
+    // Helpers
+    $day = 3;
     $n = PHP_EOL;
     $input = str(File::get(resource_path(sprintf('aoc_input/day%s.txt', $day))));
+    $get = collect([
+        3 => [
+            'priority'=>collect(range('a', 'z'))->merge(range('A', "Z"))->keyBy(fn($a,$i)=>$i+1)->flip()
+        ]
+    ])[$day];
     collect([
         // Day 1
         fn() => $input->explode($n.$n)->map(
@@ -43,6 +48,15 @@ Route::get('/', function () {
            'Day 2, Part 2: '.$scoresPerMatch->sum()
         )),
         // Day 3
+        fn() => $input->explode($n)->map(
+            fn($i)=>collect(str_split($i))->split(2)
+        )->map(
+            fn($i)=>$i[0]->intersect($i[1])->unique()->first()
+        )->map(fn($c) => $get['priority'][$c]
+        )->tap(fn($t)=>dd(
+         'Day 3, Part 1: '.$t->sum(),
+        )),
+        // Day #
         // fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
         //    'Day #, Part #: ',
         // )),
