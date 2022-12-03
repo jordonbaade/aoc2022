@@ -32,20 +32,19 @@ Route::get('/', function () {
             fn($match) => str($match)->replace(
                 ['A', 'B', 'C', 'X', 'Y', 'Z'], [1, 2, 3, 0, 3, 6]
             )->explode(' ')
-        )->map(fn($p) => $p[1] + (($p[1] == 3) ? $p[0] : (
-                $p[1] == 6
-                ? ($p[0] == 3 ? 1 : $p[0]+1)
-                : ($p[0] == 1 ? 3 : $p[0]-1)
-        )))->tap(function($scoresPerMatch) {
-                   dd(
-                   'Day 2, Part 1: 15422 (Calculated from old code)',
-                   'Day 2, Part 2: '.$scoresPerMatch->sum()
-                   );
-        }),
+        )->map(fn($p) => $p[1] + (
+               $p[1] == 3
+            ?  $p[0]
+            : ($p[1] == 6
+            ? ($p[0] == 3 ? 1 : $p[0]+1)
+            : ($p[0] == 1 ? 3 : $p[0]-1))
+        ))->tap(fn($scoresPerMatch) => dd(
+           'Day 2, Part 1: 15422 (Calculated from old code)',
+           'Day 2, Part 2: '.$scoresPerMatch->sum()
+        )),
         // Day 3
-//        fn() => $input->dd('dostuffhere')->tap(function($caloriesByElf) {
-//            dump('Day 2, Part 1: ');
-//            dump('Day 2, Part 2: ');
-//        }),
+        // fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
+        //    'Day #, Part #: ',
+        // )),
     ])[$day-1]();
 });
