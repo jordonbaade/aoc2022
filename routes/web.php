@@ -30,16 +30,16 @@ Route::get('/', function () {
         // Day 2
         fn() => $input->explode($n)->map(
             fn($match) => str($match)->replace(
-                ['A', 'B', 'C', 'X', 'Y', 'Z'], [1, 2, 3, 1, 2, 3]
+                ['A', 'B', 'C', 'X', 'Y', 'Z'], [1, 2, 3, 0, 3, 6]
             )->explode(' ')
-        )->map(fn($point) =>
-            (($result = $point[0]-$point[1]) === 0
-                ? 3 : ($result === -1 || $result === 2 ? 6 : 0)
-            ) + $point[1]
-        )->tap(function($scoresPerMatch) {
+        )->map(fn($p) => $p[1] + (($p[1] == 3) ? $p[0] : (
+                $p[1] == 6
+                ? ($p[0] == 3 ? 1 : $p[0]+1)
+                : ($p[0] == 1 ? 3 : $p[0]-1)
+        )))->tap(function($scoresPerMatch) {
                    dd(
-                   'Day 2, Part 1: '.$scoresPerMatch->sum(),
-                   'Day 2, Part 2: '
+                   'Day 2, Part 1: 15422 (Calculated from old code)',
+                   'Day 2, Part 2: '.$scoresPerMatch->sum()
                    );
         }),
         // Day 3
