@@ -34,40 +34,40 @@ Route::get('/', function () {
         ),
         // Day 2
         fn() => $input->explode($n)->map(
-            fn($match) => str($match)->replace(
-                ['A', 'B', 'C', 'X', 'Y', 'Z'], [1, 2, 3, 0, 3, 6]
-            )->explode(' ')
-        )->map(fn($p) => $p[1] + (
-               $p[1] == 3
-            ?  $p[0]
-            : ($p[1] == 6
-            ? ($p[0] == 3 ? 1 : $p[0]+1)
-            : ($p[0] == 1 ? 3 : $p[0]-1))
-        ))->tap(fn($scoresPerMatch) => dd(
-           'Day 2, Part 1: 15422 (Calculated from old code)',
-           'Day 2, Part 2: '.$scoresPerMatch->sum()
-        )),
+                fn($match) => str($match)->replace(
+                    ['A', 'B', 'C', 'X', 'Y', 'Z'], [1, 2, 3, 0, 3, 6]
+                )->explode(' ')
+            )->map(fn($p) => $p[1] + (
+                   $p[1] == 3
+                ?  $p[0]
+                : ($p[1] == 6
+                ? ($p[0] == 3 ? 1 : $p[0]+1)
+                : ($p[0] == 1 ? 3 : $p[0]-1))
+            ))->tap(fn($scoresPerMatch) => dd(
+               'Day 2, Part 1: 15422 (Calculated from old code)',
+               'Day 2, Part 2: '.$scoresPerMatch->sum()
+            )),
         // Day 3
         fn() => $input->explode($n)->map(
-            fn($i)=>collect(str_split($i))
-        )->chunk(3)->map->values()->map(
-            fn($i)=>$i[0]->intersect($i[1])->intersect($i[2])->unique()->first()
-        )->map(fn($c) => $get['priority'][$c]
-        )->tap(fn($t)=>dd(
-            'Day 3, Part 1: 8252 (Calculated from old code)',
-            'Day 3, Part 2: '.$t->sum()
-        )),
+                fn($i)=>collect(str_split($i))
+            )->chunk(3)->map->values()->map(
+                fn($i)=>$i[0]->intersect($i[1])->intersect($i[2])->unique()->first()
+            )->map(fn($c) => $get['priority'][$c]
+            )->tap(fn($t)=>dd(
+                'Day 3, Part 1: 8252 (Calculated from old code)',
+                'Day 3, Part 2: '.$t->sum()
+            )),
         // Day 4
         fn() => $input->explode($n)->map(fn($i)=>str($i)->explode(','))
             ->map->map(fn($i)=>str($i)->explode('-'))->map(function($i){
-                return ($i[0][0] >= $i[1][0] && $i[0][1] <= $i[1][1])
-                    || ($i[1][0] >= $i[0][0] && $i[1][1] <= $i[0][1]) || null;
+                return (collect(range($i[0][0],$i[0][1]))->intersect(range($i[1][0],$i[1][1]))->count()) || null;
             })->filter()->tap(fn($t)=>dd(
-            'Day #, Part #: '.$t->count(),
-        )),
+                'Day #, Part #: 475 (Calculated from old code)',
+                'Day #, Part #: '.$t->count(),
+            )),
         // Day #
         // fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
-        //    'Day #, Part #: ',
-        // )),
+        //        'Day #, Part #: ',
+        //     )),
     ])[$day-1]();
 });
