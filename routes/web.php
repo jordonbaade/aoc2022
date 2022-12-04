@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // Helpers
-    $day = 3;
+    $day = 4;
     $n = PHP_EOL;
     $input = str(File::get(resource_path(sprintf('aoc_input/day%s.txt', $day))));
     $get = collect([
         3 => [
             'priority'=>collect(range('a', 'z'))->merge(range('A', "Z"))->keyBy(fn($a,$i)=>$i+1)->flip()
         ]
-    ])[$day];
+    ])[$day] ?? [];
     collect([
         // Day 1
         fn() => $input->explode($n.$n)->map(
@@ -56,6 +56,14 @@ Route::get('/', function () {
         )->tap(fn($t)=>dd(
             'Day 3, Part 1: 8252 (Calculated from old code)',
             'Day 3, Part 2: '.$t->sum()
+        )),
+        // Day 4
+        fn() => $input->explode($n)->map(fn($i)=>str($i)->explode(','))
+            ->map->map(fn($i)=>str($i)->explode('-'))->map(function($i){
+                return ($i[0][0] >= $i[1][0] && $i[0][1] <= $i[1][1])
+                    || ($i[1][0] >= $i[0][0] && $i[1][1] <= $i[0][1]) || null;
+            })->filter()->tap(fn($t)=>dd(
+            'Day #, Part #: '.$t->count(),
         )),
         // Day #
         // fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
