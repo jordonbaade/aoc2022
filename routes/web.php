@@ -15,12 +15,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // Helpers
-    $day = 4;
+    $day = 5;
     $n = PHP_EOL;
     $input = str(File::get(resource_path(sprintf('aoc_input/day%s.txt', $day))));
     $get = collect([
         3 => [
             'priority'=>collect(range('a', 'z'))->merge(range('A', "Z"))->keyBy(fn($a,$i)=>$i+1)->flip()
+        ],
+        5 => [
+            'chart' => fn($input) => $input->takeUntil(fn($i)=>str($i)->startsWith(' 1'))->pipe(
+                fn($r)=>$r->map(fn($r)=>str($r)->split(4)->map(fn($s)=>str($s)->beforeLast(' ')->value()))
+            )->pipe(function($c){
+                $rows = $c->count() - 1;
+                $cols = $c[0]->count() - 1;
+                $skeleton = collect(range(0,$cols))->map(fn($r)=>collect(range(0, $rows)));
+                return $skeleton->map(fn($row, $ri)=>$row->map(
+                    fn($col,$ci)=>$c[$ci][$ri])->reverse()->values()->reject(fn($s)=>blank($s))
+                );
+            }),
+            'moves' => fn($input) => $input->skipUntil(fn($i)=>blank($i))->skip(1)->map(
+                fn($s)=>str($s)->replace(['move ', 'from ', 'to '], [''])->explode(' ')
+            ),
         ]
     ])[$day] ?? [];
     collect([
@@ -65,9 +80,25 @@ Route::get('/', function () {
                 'Day #, Part #: 475 (Calculated from old code)',
                 'Day #, Part #: '.$t->count(),
             )),
+        // Day 5
+        $input->explode($n)->pipe(fn($c)=>collect([
+            'chart'=>$get['chart']($c),
+            'moves'=>$get['moves']($c)
+        ]))->pipe(function($get){
+            return $get['chart']->pipe(function($chart) use ($get) {
+                $get['moves']->each(function($moveset) use ($chart) {
+                    collect(range(1,$moveset[0]))->each(
+                        fn($i)=>$chart[$moveset[2]-1]->push($chart[$moveset[1]-1]->pop())
+                    );
+                });
+                return $chart;
+            })->map->last()->map(fn($s)=>str($s)->replace(['[',']'], '')->value());
+        })->tap(fn($t)=>dd(
+            'Day 5, Part 1: '.$t->reduce(fn($c,$i)=>$c.$i),
+        )),
         // Day #
-        // fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
-        //        'Day #, Part #: ',
-        //     )),
+        //fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
+        //    'Day #, Part #: ',
+        //)),
     ])[$day-1]();
 });
