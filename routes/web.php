@@ -86,15 +86,16 @@ Route::get('/', function () {
             'moves'=>$get['moves']($c)
         ]))->pipe(function($get){
             return $get['chart']->pipe(function($chart) use ($get) {
-                $get['moves']->each(function($moveset) use ($chart) {
-                    collect(range(1,$moveset[0]))->each(
-                        fn($i)=>$chart[$moveset[2]-1]->push($chart[$moveset[1]-1]->pop())
-                    );
-                });
+                $get['moves']->each(
+                    fn($moveset) => $chart[$moveset[1]-1]->pop($moveset[0])->reverse()->each(
+                        fn($i)=>$chart[$moveset[2]-1]->push($i)
+                    )
+                );
                 return $chart;
             })->map->last()->map(fn($s)=>str($s)->replace(['[',']'], '')->value());
         })->tap(fn($t)=>dd(
-            'Day 5, Part 1: '.$t->reduce(fn($c,$i)=>$c.$i),
+            'Day 5, Part 1: CMZ (Calculated from old code)',
+            'Day 5, Part 2: '.$t->reduce(fn($c,$i)=>$c.$i),
         )),
         // Day #
         //fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
