@@ -98,10 +98,11 @@ Route::get('/', function () {
             'Day 5, Part 2: '.$t->reduce(fn($c,$i)=>$c.$i),
         )),
         // Day #
-        fn() => collect(str_split($input))->sliding(4)->first(
-            fn($i)=>$i->unique()->count() == 4
+        fn() => collect(str_split($input))->sliding(14)->first(
+            fn($i)=>$i->unique()->count() == 14
         )->tap(fn($t)=>dd(
-            'Day 5, Part 1: '.$t->flip()->last() + 1,
+            'Day 5, Part 1: 1275 (Calculated from old code)',
+            'Day 5, Part 2: '.$t->flip()->last() + 1,
         )),
         // Day #
         //fn() => $input->dd()->tap(fn($t)=>dd(
