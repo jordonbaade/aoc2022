@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // Helpers
-    $day = 5;
+    $day = 6;
     $n = PHP_EOL;
     $input = str(File::get(resource_path(sprintf('aoc_input/day%s.txt', $day))));
     $get = collect([
@@ -77,11 +77,11 @@ Route::get('/', function () {
             ->map->map(fn($i)=>str($i)->explode('-'))->map(function($i){
                 return (collect(range($i[0][0],$i[0][1]))->intersect(range($i[1][0],$i[1][1]))->count()) || null;
             })->filter()->tap(fn($t)=>dd(
-                'Day #, Part #: 475 (Calculated from old code)',
-                'Day #, Part #: '.$t->count(),
+                'Day 4, Part 1: 475 (Calculated from old code)',
+                'Day 4, Part 2: '.$t->count(),
             )),
         // Day 5
-        $input->explode($n)->pipe(fn($c)=>collect([
+        fn() => $input->explode($n)->pipe(fn($c)=>collect([
             'chart'=>$get['chart']($c),
             'moves'=>$get['moves']($c)
         ]))->pipe(function($get){
@@ -98,7 +98,13 @@ Route::get('/', function () {
             'Day 5, Part 2: '.$t->reduce(fn($c,$i)=>$c.$i),
         )),
         // Day #
-        //fn() => $input->dd('dostuffhere')->tap(fn($t)=>dd(
+        fn() => collect(str_split($input))->sliding(4)->first(
+            fn($i)=>$i->unique()->count() == 4
+        )->tap(fn($t)=>dd(
+            'Day 5, Part 1: '.$t->flip()->last() + 1,
+        )),
+        // Day #
+        //fn() => $input->dd()->tap(fn($t)=>dd(
         //    'Day #, Part #: ',
         //)),
     ])[$day-1]();
